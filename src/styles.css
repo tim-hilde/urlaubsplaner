@@ -541,6 +541,10 @@
     font-size: 15px;
     color: var(--ink);
     flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .bridge .b-ratio {
     font-family: var(--mono);
@@ -549,6 +553,8 @@
     font-weight: 600;
     font-feature-settings: "tnum";
     letter-spacing: 0.04em;
+    white-space: nowrap;
+    flex-shrink: 0;
   }
   .bridge.applied .b-ratio { color: var(--ink-3); }
   .bridge.applied .b-name { color: var(--ink-3); }
