@@ -18,7 +18,7 @@ export function Bridges({ bridges, vac, onApply }: BridgesProps) {
           return (
             <div
               key={b.id}
-              className={'bridge' + (applied ? ' applied' : '')}
+              className="bridge"
               onClick={() => onApply(b.bridgeDays, applied)}
               title={applied ? 'Bereits eingetragen — Klick zum Entfernen' : 'Klick zum Eintragen'}
             >
