@@ -10,6 +10,7 @@ interface MastheadProps {
   quota: number;
   setQuota: (q: number) => void;
   remaining: number;
+  over: number;
   status: HolidayStatus;
   fetchedAt?: number;
   error?: Error;
@@ -19,7 +20,7 @@ interface MastheadProps {
 const numberFormat = new Intl.NumberFormat('de-DE', { maximumFractionDigits: 1 });
 
 export function Masthead(props: MastheadProps) {
-  const { year, setYear, state, setState, quota, setQuota, remaining, status, fetchedAt, error, onRefresh } = props;
+  const { year, setYear, state, setState, quota, setQuota, remaining, over, status, fetchedAt, error, onRefresh } = props;
   return (
     <header className="masthead">
       <div className="title-row">
@@ -56,8 +57,8 @@ export function Masthead(props: MastheadProps) {
 
         <div className="cell indent">
           <div className="label">Resturlaub</div>
-          <div className="value mono" style={{ color: remaining === 0 ? 'var(--rot)' : 'var(--gold)' }}>
-            {numberFormat.format(remaining)}
+          <div className="value mono" style={{ color: over > 0 ? 'var(--rot)' : remaining === 0 ? 'var(--rot)' : 'var(--gold)' }}>
+            {over > 0 ? `−${numberFormat.format(over)}` : numberFormat.format(remaining)}
             <span style={{ fontSize: 14, color: 'var(--ink-3)', marginLeft: 8 }}>
               von {numberFormat.format(quota)}
             </span>

@@ -1,10 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Masthead } from './components/Masthead';
 import { Month } from './components/Month';
-import { Stats } from './components/Stats';
 import { Bridges } from './components/Bridges';
 import { Legend } from './components/Legend';
-import { Colophon } from './components/Colophon';
 import { useHolidays } from './lib/holidays/useHolidays';
 import { computeBridges } from './lib/bridges';
 import { dowMonFirst } from './lib/dates';
@@ -112,11 +110,14 @@ export function App() {
         quota={quota}
         setQuota={setQuota}
         remaining={remaining}
+        over={over}
         status={status}
         fetchedAt={fetchedAt}
         error={error}
         onRefresh={refresh}
       />
+
+      <Legend onReset={resetYear} onRefreshHolidays={refresh} />
 
       <div className="grid-section-title">Jahr · {year}</div>
 
@@ -135,20 +136,7 @@ export function App() {
         ))}
       </div>
 
-      <Stats
-        used={used}
-        quota={quota}
-        remaining={remaining}
-        over={over}
-        monthUsed={monthUsed}
-        holidayCount={holidayMap.size}
-      />
-
       <Bridges bridges={bridges} vac={vac} onApply={applyBridge} />
-
-      <Legend onReset={resetYear} onRefreshHolidays={refresh} />
-
-      <Colophon year={year} state={state} status={status} />
     </div>
   );
 }
