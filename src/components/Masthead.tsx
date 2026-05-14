@@ -26,7 +26,7 @@ export function Masthead(props: MastheadProps) {
       <div className="title-row">
         <div className="title-block">
           <h1 className="title">Urlaubs<em>planer</em></h1>
-          <p className="title-note">Alle Daten bleiben in deinem Browser</p>
+          <p className="title-note">Lokal in deinem Browser</p>
         </div>
         <StatusBadge status={status} fetchedAt={fetchedAt} error={error} onRefresh={onRefresh} />
       </div>
