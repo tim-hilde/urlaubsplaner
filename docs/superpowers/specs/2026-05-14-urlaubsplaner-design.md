@@ -216,17 +216,17 @@ Component tree:
 ```
 App
 ├── Masthead
-│   ├── Title
+│   ├── Title + "Alle Daten bleiben in deinem Browser" subtitle
 │   ├── Year stepper
 │   ├── Bundesland dropdown (custom BundeslandSelect)
 │   ├── Quota input
 │   ├── Remaining readout (shows −N in red when over quota)
 │   └── StatusBadge
 ├── Legend (with "Feiertage neu laden", "Jahr zurücksetzen", "Drucken")
+├── Bridges
 ├── SectionTitle "Jahr · YYYY"
-├── YearGrid
-│   └── Month × 12
-└── Bridges
+└── YearGrid
+    └── Month × 12
 ```
 
 Visual design ported from `docs/handoff/urlaubsplaner/project/index.html` — newspaper / paper aesthetic, Newsreader + JetBrains Mono fonts via Google Fonts.
@@ -294,7 +294,19 @@ When holidays load (any status), iterate `vacByYear[currentYear]` and remove ent
 
 ## 6. Bridges
 
-Ported unchanged from `docs/handoff/urlaubsplaner/project/app.jsx`. Computed from `(year, holidayMap, vac)`. Half-day vacations count as "off" for bridge purposes (same as full days). Clicking a bridge suggestion applies full days to all listed dates (not halves). Already-applied bridges show muted styling.
+Positioned between Legend and the year grid. Computed from `(year, holidayMap, vac)`.
+
+**Metric:** `gain = withBridgeOff − naturalOff`
+- `withBridgeOff` = length of the continuous off-stretch that includes the bridge day(s)
+- `naturalOff` = the larger of the two off-stretches directly bordering the bridge (left and right), measured without the bridge days
+
+**Filter:** only suggestions with `gain ≥ 2` are shown (gain=1 means the bridge day adds only itself, no extra free days from connecting off-stretches).
+
+**Sort:** primary — `gain / bridgeDays.length` descending (leverage); secondary — `gain` descending; tertiary — date ascending.
+
+**Display:** `"{N} Tag(e) → +{gain} frei"` — e.g. "1 Tag → +2 frei" for Christi Himmelfahrt (Thursday, Friday bridge connects to Saturday+Sunday).
+
+Clicking a suggestion applies full days to all listed bridge dates. Clicking again removes them. Already-applied bridges show muted styling. Half-day vacations count as "off" for bridge purposes.
 
 ## 7. Tests (Vitest)
 
@@ -304,7 +316,7 @@ Unit tests only, focused on logic that hurts when wrong:
 - `tests/fallback.test.ts` — known holidays for a sample of years × states (e.g., BY 2025: Heilige Drei Könige present; NW 2025: not present; SN 2025: Buß- und Bettag = 2025-11-19)
 - `tests/api.test.ts` — parser with happy-path response, extra fields, missing fields, unrecognizable shape (throws)
 - `tests/cache.test.ts` — write/read round trip, key format, handling of corrupted JSON
-- `tests/bridges.test.ts` — known cases (Christi Himmelfahrt always on Thursday → suggests Friday)
+- `tests/bridges.test.ts` — gain calculation (Christi Himmelfahrt gain=2, Tag der Arbeit gain=1 filtered), sort order by leverage, gain≥2 filter
 - `tests/vacation.test.ts` — sum of mixed full/half, legacy migration `true → 'full'`, counting per month
 
 Component tests are used for interactive custom components with non-trivial state machines (e.g. BundeslandSelect). No component tests for pure display components. No fetch-mocking integration tests beyond the parser.
