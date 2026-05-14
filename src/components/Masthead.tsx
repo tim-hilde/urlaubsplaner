@@ -1,5 +1,5 @@
-import { BUNDESLAENDER } from '../lib/holidays/states';
 import type { BundeslandCode, HolidayStatus } from '../lib/holidays/types';
+import { BundeslandSelect } from './BundeslandSelect';
 import { StatusBadge } from './StatusBadge';
 
 interface MastheadProps {
@@ -39,15 +39,7 @@ export function Masthead(props: MastheadProps) {
 
         <div className="cell indent">
           <div className="label">Bundesland</div>
-          <select
-            className="inline"
-            value={state}
-            onChange={(e) => setState(e.target.value as BundeslandCode)}
-          >
-            {BUNDESLAENDER.map(([code, name]) => (
-              <option key={code} value={code}>{name}</option>
-            ))}
-          </select>
+          <BundeslandSelect value={state} onChange={setState} />
         </div>
 
         <div className="cell indent">
