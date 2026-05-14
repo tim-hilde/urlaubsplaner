@@ -27,7 +27,7 @@ export function StatusBadge({ status, fetchedAt, error, onRefresh }: StatusBadge
       tooltip = 'Feiertage werden geladen';
       break;
     case 'fresh':
-      tooltip = 'Feiertage von heute geladen';
+      tooltip = 'Feiertage heute geladen';
       break;
     case 'cached':
       tooltip = fetchedAt
