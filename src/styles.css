@@ -554,6 +554,9 @@
     white-space: nowrap;
     flex-shrink: 0;
   }
+  .bridge.applied {
+    opacity: 0.45;
+  }
 
   @media (max-width: 1400px) {
     .year-grid { grid-template-columns: repeat(4, 1fr); }
