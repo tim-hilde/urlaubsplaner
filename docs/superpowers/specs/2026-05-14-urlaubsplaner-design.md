@@ -35,7 +35,7 @@ A single-user, browser-only tool to plan annual vacation against German public h
 - PWA / native mobile
 - i18n (German-only)
 - Dark mode
-- Component or E2E tests (unit tests only)
+- E2E tests (Playwright); component tests only where interaction logic warrants it
 - User-selectable holiday API
 
 ## 2. Architecture
@@ -308,7 +308,7 @@ Unit tests only, focused on logic that hurts when wrong:
 - `tests/bridges.test.ts` — known cases (Christi Himmelfahrt always on Thursday → suggests Friday)
 - `tests/vacation.test.ts` — sum of mixed full/half, legacy migration `true → 'full'`, counting per month
 
-No component tests; no fetch-mocking integration tests beyond the parser.
+Component tests are used for interactive custom components with non-trivial state machines (e.g. BundeslandSelect). No component tests for pure display components. No fetch-mocking integration tests beyond the parser.
 
 ## 8. Build & deployment
 
