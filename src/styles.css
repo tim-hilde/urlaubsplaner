@@ -109,6 +109,20 @@
     line-height: 1.35;
   }
 
+  .title-block {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .title-note {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 14px;
+    color: var(--ink-3);
+    margin: 0;
+    letter-spacing: 0.01em;
+  }
+
   /* ===== Inline editors strip ===== */
 
   .strip {

@@ -24,7 +24,10 @@ export function Masthead(props: MastheadProps) {
   return (
     <header className="masthead">
       <div className="title-row">
-        <h1 className="title">Urlaubs<em>planer</em></h1>
+        <div className="title-block">
+          <h1 className="title">Urlaubs<em>planer</em></h1>
+          <p className="title-note">Alle Daten bleiben in deinem Browser</p>
+        </div>
         <StatusBadge status={status} fetchedAt={fetchedAt} error={error} onRefresh={onRefresh} />
       </div>
 
