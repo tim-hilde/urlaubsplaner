@@ -25,7 +25,7 @@ export function Bridges({ bridges, vac, onApply }: BridgesProps) {
               <span className="b-date">{b.label}</span>
               <span className="b-name">{b.holidayName}</span>
               <span className="b-ratio">
-                {b.bridgeDays.length}→{b.totalOff} Tage
+                {b.bridgeDays.length} Tag{b.bridgeDays.length > 1 ? 'e' : ''} → +{b.gain} frei
               </span>
             </div>
           );

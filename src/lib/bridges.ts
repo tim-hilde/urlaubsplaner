@@ -6,7 +6,7 @@ export interface Bridge {
   id: string;
   holidayName: string;
   bridgeDays: string[];
-  totalOff: number;
+  gain: number;
   label: string;
 }
 
@@ -27,37 +27,27 @@ function isOff(date: Date, holidayMap: HolidayMap): boolean {
 
 function makeBridge(holiday: HolidayEntry, bridgeDates: Date[], holidayMap: HolidayMap): Bridge {
   const bridgeISOs = bridgeDates.map((d) => isoOf(d.getFullYear(), d.getMonth(), d.getDate()));
-  const all = new Set(bridgeISOs);
-  const offWithBridge = (date: Date): boolean => {
-    const iso = isoOf(date.getFullYear(), date.getMonth(), date.getDate());
-    return all.has(iso) || dowMonFirst(date) >= 5 || holidayMap.has(iso);
-  };
-
   const sorted = bridgeDates.slice().sort((a, b) => a.getTime() - b.getTime());
-  const minD = sorted[0];
-  const maxD = sorted[sorted.length - 1];
-  const start = new Date(Math.min(minD.getTime(), holiday.date.getTime()));
-  const end = new Date(Math.max(maxD.getTime(), holiday.date.getTime()));
 
-  let s = new Date(start);
-  while (true) {
-    const prev = addDays(s, -1);
-    if (offWithBridge(prev)) s = prev;
-    else break;
-  }
-  let e = new Date(end);
-  while (true) {
-    const nxt = addDays(e, 1);
-    if (offWithBridge(nxt)) e = nxt;
-    else break;
+  // Count off-days stretching left from bridgeStart (not including bridge itself)
+  let leftStretch = 0;
+  let cursor = addDays(sorted[0], -1);
+  while (isOff(cursor, holidayMap)) {
+    leftStretch++;
+    cursor = addDays(cursor, -1);
   }
 
-  let count = 0;
-  let cursor = new Date(s);
-  while (cursor <= e) {
-    if (offWithBridge(cursor)) count++;
+  // Count off-days stretching right from bridgeEnd (not including bridge itself)
+  let rightStretch = 0;
+  cursor = addDays(sorted[sorted.length - 1], 1);
+  while (isOff(cursor, holidayMap)) {
+    rightStretch++;
     cursor = addDays(cursor, 1);
   }
+
+  const withBridgeOff = leftStretch + bridgeDates.length + rightStretch;
+  const naturalOff = Math.max(leftStretch, rightStretch);
+  const gain = withBridgeOff - naturalOff;
 
   const label =
     bridgeDates.length === 1
@@ -68,7 +58,7 @@ function makeBridge(holiday: HolidayEntry, bridgeDates: Date[], holidayMap: Holi
     id: `${holiday.iso}-${bridgeISOs.join('|')}`,
     holidayName: holiday.name,
     bridgeDays: bridgeISOs,
-    totalOff: count,
+    gain,
     label,
   };
 }
@@ -121,11 +111,19 @@ export function computeBridges(
     }
   }
 
-  results.sort((a, b) => {
-    const ra = a.totalOff / a.bridgeDays.length;
-    const rb = b.totalOff / b.bridgeDays.length;
-    if (rb !== ra) return rb - ra;
+  // Only show bridges where gain is meaningful (≥ 2: bridge days + at least one extra day off)
+  const meaningful = results.filter((b) => b.gain >= 2);
+
+  meaningful.sort((a, b) => {
+    // Primary: leverage (gain per bridge day) descending
+    const la = a.gain / a.bridgeDays.length;
+    const lb = b.gain / b.bridgeDays.length;
+    if (lb !== la) return lb - la;
+    // Secondary: absolute gain descending
+    if (b.gain !== a.gain) return b.gain - a.gain;
+    // Tertiary: date ascending
     return a.bridgeDays[0].localeCompare(b.bridgeDays[0]);
   });
-  return results;
+
+  return meaningful;
 }
