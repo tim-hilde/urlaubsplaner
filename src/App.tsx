@@ -119,6 +119,8 @@ export function App() {
 
       <Legend onReset={resetYear} onRefreshHolidays={refresh} />
 
+      <Bridges bridges={bridges} vac={vac} onApply={applyBridge} />
+
       <div className="grid-section-title">Jahr · {year}</div>
 
       <div className="year-grid">
@@ -135,8 +137,6 @@ export function App() {
           />
         ))}
       </div>
-
-      <Bridges bridges={bridges} vac={vac} onApply={applyBridge} />
     </div>
   );
 }

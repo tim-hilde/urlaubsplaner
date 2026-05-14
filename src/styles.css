@@ -501,9 +501,9 @@
 
   /* Bridge-day suggestion footer */
   .bridges {
-    margin-top: 32px;
+    margin-top: 18px;
     border-top: 1px solid var(--hair);
-    padding-top: 18px;
+    padding-top: 14px;
   }
   .bridges-title {
     font-family: var(--mono);
@@ -511,7 +511,7 @@
     letter-spacing: 0.22em;
     text-transform: uppercase;
     color: var(--ink-3);
-    margin-bottom: 14px;
+    margin-bottom: 10px;
   }
   .bridges-list {
     display: grid;
