@@ -15,7 +15,7 @@ A single-user, browser-only tool to plan annual vacation against German public h
 - Holidays come from a public API (`feiertage-api.de`) with local fallback
 - User can enter total annual vacation entitlement (Urlaubsanspruch)
 - User can mark workdays as vacation: full or half day
-- Per-month and per-year stats: planned days, remaining days, overrun, peak month
+- Remaining days and overrun shown compactly in Masthead (negative value in red when over quota)
 - Bridge-day (Brückentag) suggestions
 - All state persists in localStorage; no backend, no account
 
@@ -218,17 +218,15 @@ App
 ├── Masthead
 │   ├── Title
 │   ├── Year stepper
-│   ├── Bundesland dropdown
+│   ├── Bundesland dropdown (custom BundeslandSelect)
 │   ├── Quota input
-│   ├── Remaining readout
+│   ├── Remaining readout (shows −N in red when over quota)
 │   └── StatusBadge
+├── Legend (with "Feiertage neu laden", "Jahr zurücksetzen", "Drucken")
 ├── SectionTitle "Jahr · YYYY"
 ├── YearGrid
 │   └── Month × 12
-├── Stats
-├── Bridges
-├── Legend (with "Feiertage neu laden", "Jahr zurücksetzen", "Drucken")
-└── Colophon
+└── Bridges
 ```
 
 Visual design ported from `docs/handoff/urlaubsplaner/project/index.html` — newspaper / paper aesthetic, Newsreader + JetBrains Mono fonts via Google Fonts.
@@ -255,13 +253,14 @@ Title tooltip per state:
 
 Clicks on weekend/holiday days remain ignored.
 
-### 5.3 Stats with halves
+### 5.3 Counting and display
 
 - `used` is the sum of `value === 'half' ? 0.5 : 1`
 - `remaining = max(0, quota - used)`
 - `over = max(0, used - quota)`
 - `monthUsed[i]` is a sum, can be non-integer
-- Display uses `Intl.NumberFormat('de-DE', { maximumFractionDigits: 1 })`. Examples: `12,5`, `0,5`, `12`. No zero-padding anywhere — once decimals are possible the prototype's `02`/`10` style would look inconsistent next to `12,5`. Consistency over fidelity to the prototype's integer-only padding.
+- Display uses `Intl.NumberFormat('de-DE', { maximumFractionDigits: 1 })`. Examples: `12,5`, `0,5`, `12`.
+- Masthead Resturlaub cell: shows `remaining` in gold, `0` in red when exactly spent, `−over` in red when over quota.
 
 ### 5.4 StatusBadge
 
