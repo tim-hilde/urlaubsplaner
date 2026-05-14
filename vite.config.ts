@@ -8,5 +8,8 @@ export default defineConfig(({ command }) => ({
     globals: true,
     environment: 'jsdom',
     setupFiles: ['./tests/setup.ts'],
+    fakeTimers: {
+      shouldAdvanceTime: true,
+    },
   },
 }));
